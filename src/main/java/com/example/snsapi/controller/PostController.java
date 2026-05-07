@@ -35,4 +35,12 @@ public class PostController {
     public Post createPost(@RequestBody Post post) {
         return postService.createPost(post);
     }
+
+    /**
+     * 投稿を削除する (DELETE /posts/{id})
+     */
+    @DeleteMapping("/{id}")
+    public void deletePost(@PathVariable Long id) {
+        postService.deletePost(id);
+    }
 }
