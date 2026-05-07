@@ -1,8 +1,6 @@
 package com.example.snsapi.service;
 
-import com.example.sns
 import com.example.snsapi.model.Post;
-
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
