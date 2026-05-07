@@ -1,0 +1,13 @@
+# Mavenのビルド生成物
+/target/
+
+# OS特有のファイル
+.DS_Store
+Thumbs.db
+
+# VS Codeの設定ファイル
+.vscode/
+
+# IntelliJなどの他エディタ用
+*.iml
+.idea/
