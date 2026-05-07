@@ -35,4 +35,14 @@ public class PostService {
     posts.add(post); // IDを自動採番
     return post; // リストに追加
   }
+/**
+     * 指定されたIDの投稿を削除します。
+     * @param id 削除したい投稿のID
+     * @return 削除に成功した場合は true
+     */
+
+  public boolean deletePost(Long id) {
+    // リストの中から、IDが一致するものを探して削除する
+    return posts.removeIf(post -> post.getId().equals(id));
+  }
 }
