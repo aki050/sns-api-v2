@@ -11,3 +11,41 @@ Content-Type: application/json
 
 ### 投稿を削除 (ID: 1 を消す場合)
 DELETE http://localhost:8080/posts/1
+
+
+### ========================================
+### User API テスト
+### ========================================
+
+### 1. 全ユーザー取得（初期状態 = 空リスト）
+GET http://localhost:8080/api/users
+
+### 2. ユーザー作成（1人目）
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "aki",
+  "email": "aki@example.com"
+}
+
+### 3. ユーザー作成（2人目）
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "tanaka",
+  "email": "tanaka@example.com"
+}
+
+### 4. 全ユーザー取得（2人登録済み）
+GET http://localhost:8080/api/users
+
+### 5. 特定ユーザー取得（ID=1）
+GET http://localhost:8080/api/users/1
+
+### 6. 特定ユーザー取得（ID=2）
+GET http://localhost:8080/api/users/2
+
+### 7. 存在しないユーザー取得（ID=99）
+GET http://localhost:8080/api/users/99
