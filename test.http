@@ -1,0 +1,13 @@
+### 投稿一覧を取得
+GET http://localhost:8080/posts
+
+### 新規投稿を作成
+POST http://localhost:8080/posts
+Content-Type: application/json
+
+{
+    "content": "テスト投稿です！"
+}
+
+### 投稿を削除 (ID: 1 を消す場合)
+DELETE http://localhost:8080/posts/1
