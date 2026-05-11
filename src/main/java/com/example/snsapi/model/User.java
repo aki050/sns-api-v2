@@ -1,5 +1,8 @@
 package com.example.snsapi.model;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 /**
  * User クラス
  * SNSのユーザー情報を示すモデルクラス。
@@ -22,14 +25,28 @@ public class User{
      * ユーザー名
      * ユーザーの表示名（例: "aki", "tanaka"）。
      * SNS上で表示される名前として使用する。
+     * 
+     * @NotBlank：
+     * null、空文字（""）、空白のみ（"   "）を全て拒否する。
+     * 必ず何か文字が入力されている必要がある。
      */
+    @NotBlank(message = "ユーザー名は必須です")
     private String username;
 
     /**
      * メールアドレス
      * ユーザーの連絡先情報。
      * 将来的にはログイン機能やパスワードリセットなどで使用する想定。
+     * 
+     * @NotBlank：
+     * null、空文字、空白のみを拒否。
+     * 
+     * @Email：
+     * メールアドレスの形式をチェック。
+     * 例: "test@example.com" はOK、"invalid-email" はNG。
      */
+    @NotBlank(message = "メールアドレスは必須です")
+    @Email(message = "メールアドレスの形式が正しくありません")
     private String email;
 
     // ===========================

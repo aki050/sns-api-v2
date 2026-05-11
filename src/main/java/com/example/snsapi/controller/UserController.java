@@ -4,6 +4,7 @@ import com.example.snsapi.model.User;
 import com.example.snsapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -114,19 +115,16 @@ public class UserController{
      * @RequestBody：
      * HTTPリクエストのボディ（JSON）を受け取り、Userオブジェクトに変換する。
      * 
-     * 処理の流れ：
-     * 1. クライアントが POST /api/users にJSONを送信
-     *    例: {"username":"aki","email":"aki@example.com"}
-     * 2. SpringがJSONをUserオブジェクトに自動変換
-     * 3. このメソッドが呼ばれる（引数userに変換されたオブジェクトが入る）
-     * 4. userService.createUser() でユーザーを作成（IDを自動付与）
-     * 5. 作成されたユーザー（IDあり）をJSON形式で返却
+     * @Valid：【新規追加】
+     * Userオブジェクトのバリデーションを実行する。
+     * User.javaに付けた@NotBlank、@Emailなどのアノテーションをチェック。
+     * バリデーションエラーがあれば、自動的に400エラーを返す。
      * 
      * @param user クライアントから送られてきたUserオブジェクト（JSONから変換）
      * @return 作成されたUserオブジェクト（IDが設定済み、JSON形式で返却）
      */
     @PostMapping
-    public User createUser(@RequestBody User user){
+    public User createUser(@Valid @RequestBody User user){
         // UserServiceのcreateUser()にユーザー情報を渡し、
         // IDが設定されたユーザーオブジェクトを返す
         return userService.createUser(user);

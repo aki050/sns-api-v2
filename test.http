@@ -49,3 +49,53 @@ GET http://localhost:8080/api/users/2
 
 ### 7. 存在しないユーザー取得（ID=99）
 GET http://localhost:8080/api/users/99
+
+
+### ========================================
+### バリデーションテスト
+### ========================================
+
+### 1. 正常なユーザー作成（バリデーションOK）
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "test@example.com"
+}
+
+### 2. ユーザー名が空（バリデーションエラー）
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "",
+  "email": "test@example.com"
+}
+
+### 3. メールアドレスが空（バリデーションエラー）
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": ""
+}
+
+### 4. メールアドレスの形式が不正（バリデーションエラー）
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "invalid-email"
+}
+
+### 5. 両方とも空（バリデーションエラー）
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "",
+  "email": ""
+}
