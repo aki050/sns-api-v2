@@ -30,10 +30,11 @@ public class PostService {
      * @return 保存された投稿
      */
 
+  // 投稿を作成（IDを自動採番して保存）
   public Post createPost(Post post) {
-    post.setId(nextId++); // IDを自動的に割り当てる
-    posts.add(post); // IDを自動採番
-    return post; // リストに追加
+    post.setId(nextId++);   // IDを自動採番（1, 2, 3...）
+    posts.add(post);        // リストに追加
+    return post;            // 作成した投稿を返す
   }
 /**
      * 指定されたIDの投稿を削除します。
@@ -44,5 +45,16 @@ public class PostService {
   public boolean deletePost(Long id) {
     // リストの中から、IDが一致するものを探して削除する
     return posts.removeIf(post -> post.getId().equals(id));
+  }
+
+  // 特定ユーザーの投稿一覧を取得
+  public List<Post> getPostsByUserId(Long userId) {
+    List<Post> userPosts = new ArrayList<>();   // 結果を格納するリスト
+    for (Post post : posts) {   // 全投稿をループ
+      if (post.getUserId() != null && post.getUserId().equals(userId)) {    // userIdが一致するか確認
+        userPosts.add(post);    // 一致したら結果リストに追加
+      }
+    }
+    return userPosts;   // ユーザーの投稿一覧を返す
   }
 }
