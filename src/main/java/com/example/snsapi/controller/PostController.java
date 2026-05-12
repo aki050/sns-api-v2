@@ -10,7 +10,7 @@ import java.util.List;
  * 投稿に関するリクエストを受け付ける窓口（コントローラー）
  */
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/api/posts")
 public class PostController {
 
     private final PostService postService;
@@ -20,20 +20,16 @@ public class PostController {
         this.postService = postService;
     }
 
-    /**
-     * 投稿一覧を取得する (GET http://localhost:8080/posts)
-     */
-    @GetMapping
-    public List<Post> getAllPosts() {
-        return postService.getAllPosts();
+    // 特定ユーザーの投稿一覧を取得 (GET http://localhost:8080/posts)
+    @GetMapping("/user/{userId}")   // GET /api/posts/user/{userId} にマッピング
+    public List<Post> getPostsByUserId(@PathVariable Long userId) {    // URLの{userId}を引数に受け取る// URLの{userId}をLong型で受け取る
+        return postService.getPostsByUserId(userId);    // Serviceから該当ユーザーの投稿一覧を取得して返す
     }
 
-    /**
-     * 新しく投稿を作る (POST http://localhost:8080/posts)
-     */
-    @PostMapping
-    public Post createPost(@RequestBody Post post) {
-        return postService.createPost(post);
+     // 投稿を作成 (POST http://localhost:8080/posts)
+    @PostMapping     // POST /api/posts にマッピング
+    public Post createPost(@RequestBody Post post) {    // リクエストボディからPostオブジェクトを受け取る
+        return postService.createPost(post);    // Serviceで作成してそのまま返す
     }
 
     /**
