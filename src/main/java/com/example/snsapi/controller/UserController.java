@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * UserControllerクラス
@@ -84,26 +85,15 @@ public class UserController{
         // UserServiceのgetAllUsers()を呼び出して結果を返す
         return userService.getAllUsers();
     }
-
-    /**
-     * 特定ユーザー取得（IDで指定）
-     * 
-     * @GetMapping("/{id}")：
-     * HTTPのGETリクエストを受け付ける。
-     * URLは /api/users/{id}
-     * 例: GET /api/users/1 → id=1のユーザーを取得
-     * 
-     * @PathVariable：
-     * URL内の {id} 部分を引数として受け取る。
-     * 例: /api/users/5 にアクセスすると、id = 5 が渡される
-     * 
-     * @param id 取得したいユーザーのID（URLから取得）
-     * @return 該当するUserオブジェクト（JSON形式で返却）
-     */
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id){
-        // UserServiceのgetUserById()を呼び出して結果を返す
-        return userService.getUserById(id);
+    // ID指定でユーザーを取得
+    @GetMapping("/{id}")  // GET /api/users/{id} にマッピング
+    public User getUserById(@PathVariable Long id){  // URLの{id}をLong型で受け取る
+        // Serviceから Optional<User> を取得
+        Optional<User> userOpt = userService.getUserById(id);
+        // Optional が空（ユーザーが存在しない）の場合は例外を投げる
+        return userOpt.orElseThrow(() -> 
+            new RuntimeException("User not found: id=" + id) // 404エラー相当の例外
+        );
     }
     /**
      * 新規ユーザー作成

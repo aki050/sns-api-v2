@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * UserServiceクラス
@@ -53,27 +54,19 @@ public class UserService {
     public List<User> getAllUsers(){
         return users;
     }
-    /**
-     * 指定されたIDのユーザーを取得する
-     * 
-     * リストの中から、IDが一致するユーザーを探して返す。
-     * 見つからない場合はnullを返す。
-     * 
-     * @param id 取得したいユーザーのID
-     * @return 該当するUserオブジェクト、見つからない場合はnull
-     */
-    public User getUserById(Long id){
-      // users リストをループで1つずつ確認
+
+    // IDでユーザーを取得（Optional で包んで返す = null安全）
+    public Optional<User> getUserById(Long id){
         for (User user : users){
             // user.getId()で取得したIDと、引数のidが一致するか比較
             // Long型の比較は「==」ではなく「.equals()」を使う
             if (user.getId().equals(id)){
-              // 一致したらそのユーザーを返して処理終了
-                return user;
+              // 見つかったらOptionalの箱に入れて返す
+                return Optional.of(user);
             }
         }
-        // ループを全て回っても見つからなかった場合はnullを返す
-        return null;
+        // 見つからなかったら空の箱を返す（nullではない）
+        return Optional.empty();
     }
     /**
      * 新しいユーザーを作成する
