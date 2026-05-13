@@ -1,60 +1,65 @@
 package com.example.snsapi.service;
 
-import com.example.snsapi.model.Post;
-import org.springframework.stereotype.Service;
+import com.example.snsapi.model.Post; // Post エンティティ
+import com.example.snsapi.repository.PostRepository;  // PostRepository をインポート
+import org.springframework.beans.factory.annotation.Autowired;  // 依存性注入用
+import org.springframework.stereotype.Service;  // @Service アノテーション
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.List;  // List クラス
 
 /**
- * 投稿に関するビジネスロジックを処理するサービス
+ * PostService
+ * 投稿に関するビジネスロジックを担当するサービス層
  */
 
-@Service
+@Service  // このクラスが Service 層であることを示す
 public class PostService {
-  // 投稿データを一時的に保存するためのリスト（メモリ上の簡易データベース）
-  private final List<Post> posts = new ArrayList<>();
-  private Long nextId = 1L; //次に発行するID
+  // PostRepository を注入（依存性注入 = DI）
+  @Autowired  // Spring が自動でインスタンスを生成して注入してくれる
+  private PostRepository postRepository;
 
   /**
-     * すべての投稿を取得します。
-     * @return 投稿リスト
+     * 全投稿を取得
+     * @return 全投稿のリスト
      */
   public List<Post> getAllPosts() {
-    return posts;
+    return postRepository.findAll();  // Repository の findAll() を呼ぶだけ
+    // 生成される SQL: SELECT * FROM posts 
   }
 
   /**
-     * 新しい投稿を保存します。
-     * @param post 投稿データ
-     * @return 保存された投稿
+     * 投稿を作成
+     * @param post 作成する投稿
+     * @return 作成された投稿（IDが自動採番される）
      */
 
-  // 投稿を作成（IDを自動採番して保存）
   public Post createPost(Post post) {
-    post.setId(nextId++);   // IDを自動採番（1, 2, 3...）
-    posts.add(post);        // リストに追加
-    return post;            // 作成した投稿を返す
+    return postRepository.save(post);  // Repository の save() を呼ぶだけ
+    // 生成される SQL: INSERT INTO posts (user_id, content, created_at) VALUES (?, ?, ?)
   }
 /**
-     * 指定されたIDの投稿を削除します。
-     * @param id 削除したい投稿のID
+     * 全投稿を削除
+     * @param id 削除する投稿のID
      * @return 削除に成功した場合は true
      */
 
   public boolean deletePost(Long id) {
-    // リストの中から、IDが一致するものを探して削除する
-    return posts.removeIf(post -> post.getId().equals(id));
+    if (postRepository.existsById(id)) {  // IDが存在するか確認
+      postRepository.deleteById(id);  // DBから削除
+      // 生成される SQL: DELETE FROM posts WHERE id = ?
+      return true;  // 削除成功
+    }
+    return false;  // 削除失敗（IDが存在しない）
   }
 
-  // 特定ユーザーの投稿一覧を取得
-  public List<Post> getPostsByUserId(Long userId) {
-    List<Post> userPosts = new ArrayList<>();   // 結果を格納するリスト
-    for (Post post : posts) {   // 全投稿をループ
-      if (post.getUserId() != null && post.getUserId().equals(userId)) {    // userIdが一致するか確認
-        userPosts.add(post);    // 一致したら結果リストに追加
-      }
+  /**
+     * 特定ユーザーの投稿一覧を取得
+     * @param userId ユーザーID
+     * @return 該当ユーザーの投稿リスト
+     */
+    public List<Post> getPostsByUserId(Long userId) {
+        return postRepository.findByUserId(userId);  // Repository の findByUserId() を呼ぶだけ(カスタムメソッド)
+        // 生成される SQL: SELECT * FROM posts WHERE user_id = ?
     }
-    return userPosts;   // ユーザーの投稿一覧を返す
-  }
 }

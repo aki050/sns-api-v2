@@ -2,13 +2,16 @@ package com.example.snsapi.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.*;   // JPA のアノテーション（Entity, Table, Id など）をまとめてインポート
+import java.time.LocalDateTime;     // 日時を扱うクラス
 
 /**
  * User クラス
  * SNSのユーザー情報を示すモデルクラス。
  * 将来的にPostと関連つけて「誰が投稿したか」を管理するために使用する。
  */
-
+@Entity     // このクラスがDBのテーブルに対応するエンティティであることを示す
+@Table(name = "users")  // テーブル名を "users" に指定（複数形が一般的）
 public class User{
     // ===========================
     // フィールド（プロパティ）
@@ -19,6 +22,8 @@ public class User{
      * ユーザーを一意に識別するための番号。
      * Postクラスと同じく、Long型を使用（大きな数値に対応）。
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // IDは自動生成される（DBに任せる）
     private Long id;
 
     /**
@@ -31,6 +36,7 @@ public class User{
      * 必ず何か文字が入力されている必要がある。
      */
     @NotBlank(message = "ユーザー名は必須です")
+    @Column(nullable = false, unique = true) // DBの制約：null不可、重複不可(一意制約(同じusernameは登録できない）)
     private String username;
 
     /**
@@ -47,7 +53,12 @@ public class User{
      */
     @NotBlank(message = "メールアドレスは必須です")
     @Email(message = "メールアドレスの形式が正しくありません")
+    @Column(nullable = false) // NULL不可
     private String email;
+
+
+    @Column(name = "created_at", nullable = false, updatable = false) // DBのカラム名を "created_at" に指定、NULL不可、更新不可
+    private LocalDateTime createdAt;
 
     // ===========================
     // コンストラクタ
@@ -59,8 +70,10 @@ public class User{
      * Spring Bootが内部でオブジェクトを生成する際に必要。
      */
 
+    // JPA が内部的に使用するデフォルトコンストラクタ（引数なし）
     public User(){
     }
+
       /**
      * 全フィールド指定コンストラクタ
      * id, username, emailを指定してUserオブジェクトを作成する。
@@ -75,7 +88,14 @@ public class User{
         this.username = username;   // 引数で受け取ったusernameをフィールドに代入
         this.email = email;         // 引数で受け取ったemailをフィールドに代入
     }
-    
+    // ユーザー作成時に使うコンストラクタ
+    public User(String username, String email){
+        this.username = username;   // 引数で受け取ったusernameをフィールドに代入
+        this.email = email;         // 引数で受け取ったemailをフィールドに代入
+        this.createdAt = LocalDateTime.now(); // ユーザー作成時の日時を自動で設定
+    }
+
+
     // ===========================
     // Getter / Setter メソッド
     // ===========================

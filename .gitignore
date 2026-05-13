@@ -10,4 +10,4 @@ Thumbs.db
 
 # IntelliJなどの他エディタ用
 *.iml
-.idea/
+.idea/data/

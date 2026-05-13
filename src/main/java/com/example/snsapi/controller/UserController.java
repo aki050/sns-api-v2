@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -96,27 +97,18 @@ public class UserController{
         );
     }
     /**
-     * 新規ユーザー作成
-     * 
-     * @PostMapping：
-     * HTTPのPOSTリクエストを受け付ける。
-     * URLは /api/users
-     * 
-     * @RequestBody：
-     * HTTPリクエストのボディ（JSON）を受け取り、Userオブジェクトに変換する。
-     * 
-     * @Valid：【新規追加】
-     * Userオブジェクトのバリデーションを実行する。
-     * User.javaに付けた@NotBlank、@Emailなどのアノテーションをチェック。
-     * バリデーションエラーがあれば、自動的に400エラーを返す。
-     * 
-     * @param user クライアントから送られてきたUserオブジェクト（JSONから変換）
-     * @return 作成されたUserオブジェクト（IDが設定済み、JSON形式で返却）
+     * ユーザー作成エンドポイント
+     * POST /api/users
+     * リクエストボディから username と email を受け取り、新規ユーザーを作成する
      */
-    @PostMapping
-    public User createUser(@Valid @RequestBody User user){
-        // UserServiceのcreateUser()にユーザー情報を渡し、
-        // IDが設定されたユーザーオブジェクトを返す
+    @PostMapping    // POST /api/users へのリクエストを受け付ける
+    public User createUser(@RequestBody Map<String, String> requestData){  // リクエストボディをMapで受け取る
+        String username = requestData.get("username");  // リクエストから username を取得
+        String email = requestData.get("email");    // リクエストから email を取得
+        User user = new User(username, email);      // コンストラクタで User オブジェクトを作成（createdAt は自動で設定される）
+
+        // UserService の createUser() にユーザー情報を渡し、
+        // ID が自動採番されたユーザーオブジェクトを返す
         return userService.createUser(user);
     }
 }
