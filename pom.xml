@@ -42,6 +42,19 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+<!-- Spring Data JPA：DBとのやり取りを簡単にするライブラリ -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        
+<!-- H2 Database：開発用の軽量データベース（メモリまたはファイルに保存可能） -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
       </dependencies>
 
     <build>
